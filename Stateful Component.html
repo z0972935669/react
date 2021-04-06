@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="timer-example"></div>
+
+    <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <script type="text/babel">
+        //有狀態組件 
+        class Timer extends React.Component {
+            constructor(props) {
+                super(props);
+                // URL: https://zh-hant.reactjs.org/docs/state-and-lifecycle.html
+                this.state = { seconds: 0 };
+            }
+
+            tick() {
+                this.setState(state => ({
+                    seconds: state.seconds + 1
+                }));
+            }
+
+            // URL: https://zh-hant.reactjs.org/docs/react-component.html#componentdidmount
+            componentDidMount() {
+                this.interval = setInterval(() => this.tick(), 1000);
+            }
+
+            // URL: https://zh-hant.reactjs.org/docs/react-component.html#componentWillUnmount
+            componentWillUnmount() {
+                clearInterval(this.interval);
+            }
+
+            render() {
+                return (
+                    <div>
+                        Seconds: {this.state.seconds}
+                    </div>
+                )
+            }
+        }
+
+        ReactDOM.render(
+            <Timer />,
+            document.getElementById('timer-example')
+        )
+    </script>
+</body>
+
+</html>

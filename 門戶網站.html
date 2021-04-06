@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        #modal-root {
+            position: relative;
+            z-index: 999;
+        }
+
+        .app {
+            height: 10em;
+            width: 10em;
+            background: lightblue;
+            overflow: hidden;
+        }
+
+        .modal {
+            background-color: rgba(0, 0, 0, 0.5);
+            position: fixed;
+            height: 100%;
+            width: 100%;
+            top: 0;
+            left: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app-root"></div>
+    <div id="modal-root"></div>
+
+    <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <script type="text/babel">
+        const appRoot = document.getElementById('app-root');
+        const modalRoot = document.getElementById('modal-root');
+
+        class Modal extends React.Component {
+            constructor(props) {
+                super(props);
+                this.el = document.createElement('div');
+            }
+
+            componentDidMount() {
+                modalRoot.appendChild(this.el);
+            }
+
+            componentWillUnmount() {
+                modalRoot.removeChild(this.el);
+            }
+
+            render() {
+                return ReactDOM.createPortal(
+                    this.props.children,
+                    this.el,
+                );
+            }
+        }
+
+        class App extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = { showModal: false };
+
+                this.handleShow = this.handleShow.bind(this);
+                this.handleHide = this.handleHide.bind(this);
+            }
+
+            handleShow() {
+                this.setState({ showModal: true });
+            }
+
+            handleHide() {
+                this.setState({ showModal: false });
+            }
+
+            render() {
+                const modal = this.state.showModal ? (
+                    <Modal>
+                        <div className="modal">
+                            <button onClick={this.handleHide}>Hide modal</button>
+                        </div>
+                    </Modal>
+                ) : null;
+
+                return (
+                    <div className="app">
+                        <button onClick={this.handleShow}>Show modal</button>
+                        {modal}
+                    </div>
+                );
+            }
+        }
+
+        ReactDOM.render(<App />, appRoot);
+    </script>
+</body>
+
+</html>
